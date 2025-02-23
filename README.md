@@ -12,3 +12,5 @@ npm install -g npm@11.1.0
 npm install -g zenn-cli
 <!-- 新規記事の作成 -->
 npx zenn new:article
+<!-- 日付を入力する -->
+data: "2025-01-01"
