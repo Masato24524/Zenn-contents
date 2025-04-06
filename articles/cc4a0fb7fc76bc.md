@@ -1,5 +1,5 @@
 ---
-title: "NextjsのSSRとキャッシュ設定の関係"
+title: "NextjsのRoute Segment Config(レンダリング＆キャッシュ)設定"
 emoji: "📌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Nextjs"]
