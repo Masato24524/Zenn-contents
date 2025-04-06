@@ -1,8 +1,98 @@
 ---
-title: ""
+title: "NextjsのSSRとキャッシュ設定の関係"
 emoji: "📌"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
-published: false
-date: "2025-04-05"
+topics: ["Nextjs"]
+published: true
+date: "2025-04-06"
 ---
+
+現在ブログサイトをVercelからCloudflareに移行しようとしているのですが、
+edge runtimeの設定が理解できておらずデプロイが上手くいっていません。。。<br/>
+edge runtimeを理解する前段階として、NextjsのSSRおよびキャッシュ設定の関係について調べてみたいと思います。
+※ブログサイトではNext.js 14/ App Routerを使用しています。
+
+---
+
+#### ■不明点（現在のブログサイトでの設定）
+1. 「force-dynamic」がどのように働いているか？
+2. 「cache: no-store」がどのように働いているか？
+3. 「runtime edge」との関係は？
+<br />
+
+3.は別記事にする予定で、今回は1.と2.について調べます。
+
+※そもそもなぜ「force-dynamic」「cache: no-store」の設定にしているかなんですが、
+ビルド時にfetchでAPIルートを読みにいったときに、ページを生成前のため404になってしまう（**SSG**にしようとする）というエラーを回避するため、止む無く設定しました。
+
+> SSG(Static Site Generation)・・・ビルド時（デプロイ時）に複数のHTMLを生成してしまうので、クライアント側からアクセスするときは軽量に行える。SPAは毎回クライアント側でindex.htmlを生成するので、その点が異なる。
+
+---
+
+### ■「force-dynamic」の挙動
+
+✅ force-dynamic とは何か？
+- **Route Segment Config**（ルートセグメント構成）に属する設定
+- リクエスト時に毎回データを取得して、ページの生成を常に動的にする。
+- キャッシュを無効化して、毎回サーバーサイドでデータを取得する。
+- SSR扱いになる（SSGにしない）
+- fetchが自動的にcache: ' no-store ' 扱いになる。
+
+**注意点**
+- CDNキャッシュが効かないため、パフォーマンスが落ちる
+
+> Route Segment Config ・・・以下のように、各セグメントのファイル（page.tsx, layout.tsx, template.tsx など）で使える設定
+> // Route Segment Config 例 //
+    　export const dynamic = "force-dynamic";
+    　export const revalidate = 60;
+    　export const fetchCache = "force-no-store";
+    　export const runtime = "edge";
+> Next.js 14以降では、これらを page.tsx などのファイルの「トップレベル」で宣言する必要がある。
+
+### ■「cache: no-store」の挙動
+
+✅ fetchだけキャッシュさせたくない場合に使用する
+　force-dynamicがページ全体をSSR化させるのに対して、cache: no-storeはfetchのみに適用することができます。
+　今回の場合、私は両方同時に適用していましたが、force-dynamicを設定している時点で特に不要（二重設定）となっていました。
+
+### ■その他のRoute Segment Config
+
+|Option	|Type	|Default|
+|---|---|---|
+experimental_ppr|	boolean	|
+dynamic	'auto' | 'force-dynamic' | 'error' | 'force-static'	'auto'
+dynamicParams|	boolean	true
+revalidate	false | 0 | number	false
+fetchCache|	'auto' / 'default-cache' / 'only-cache' / 'force-cache' / 'force-no-store' / 'default-no-store' / 'only-no-store'	|'auto'
+runtime|	'nodejs' / 'edge'	|'nodejs'
+preferredRegion|	'auto' / 'global' / 'home' / string / string[]	|'auto'
+maxDuration|	number|	Set by deployment platform
+
+✅ revalidate
+　ISR（Incremental Static Regeneration） の時間を設定します。再生成が行われる時間間隔を指定でき、ページがキャッシュされてから次に再生成されるまでの待機時間を設定できます。
+　例えば、revalidate: 60 とすると、ページが最初に生成された後、60秒ごとに再生成されます。
+
+~~~
+export const revalidate = 60; // 60秒ごとに再生成
+~~~
+<br />
+
+✅ runtime
+　ここで「runtime」が登場します。実は**Route Segment Config**の設定に含まれるんですね（知らなかった・・・）
+　ページがどの実行環境で動作するかを指定します。
+　runtime: "edge" と設定すると、そのページが Vercel Edge Functions のようなエッジネットワーク上で実行されることを指定します。
+　runtime: "nodejs" に設定すると、通常のNode.jsサーバー上で実行されます。
+
+
+---
+
+参考資料：
+https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
+
+https://zenn.dev/rinda_1994/articles/e6d8e3150b312d
+
+---
+
+### さいごに
+　今回、SSR/SSGについてページを読み込むときの挙動もそうなんですが、同時にビルド時にどういったことを行っているかも理解を深めることができました。
+　Nextjsの理解について、一歩前進した気がします！
