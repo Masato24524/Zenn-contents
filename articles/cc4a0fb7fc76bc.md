@@ -4,7 +4,7 @@ emoji: "📌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Nextjs"]
 published: true
-date: "2025-04-06"
+date: "2025-04-05"
 ---
 
 現在ブログサイトをVercelからCloudflareに移行しようとしているのですが、
