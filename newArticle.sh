@@ -21,6 +21,9 @@ article_file=$(find articles -name "*.md" -type f -printf "%T@ %p\n" | sort -rn 
 if [[ -f "$article_file" ]]; then
   echo "Adding date to $article_file..."
   
+  # title行を"dummy"に置換
+  sed -i 's/^title: ""$/title: "dummy"/' "$article_file"
+
   # 直接エディタを使用して書き込む
   datestr="date: \"$today\""
   echo "Date string to add: $datestr"
