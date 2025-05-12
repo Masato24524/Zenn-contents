@@ -48,6 +48,10 @@ https://dev.classmethod.jp/articles/ws-summit-online-2020-hol-1/
 2. IAMロールの作成
 3. SSMコンソールでの確認
 4. Kinesis Firehoseの設定
+5. Glueでのデータ抽出とテーブル作成
+6. Athenaによるクエリの実行
+7. QuickSightでの可視化
+8. 後片付け
 
 ---
 
@@ -338,7 +342,7 @@ S3とAthenaが選択していることを確認しておきます。
 
 ![alt text](/images/65bfd4816baffb/image-6.png)
 
-### 後片付け
+### 8. 後片付け
 
 記事にも記載がありますが、EC2などを起動したままにしておくと課金が継続されるため、不要なAWSリソースは停止しておきましょう。（できれば削除しておくのがベストです）
 
