@@ -21,8 +21,11 @@ https://zenn.dev/masato24524/articles/49aef95c1253c2
 https://www.udemy.com/course/aws-knan/
 
 ググってみたところ、2020年と少し古いですがKinesis Firehoseを使ったハンズオントレーニングの記事があったので、それを実践してみようと思います。
-
+※2025/9/2追記
+　5月の時点では大丈夫でしたが、現在は記事が見れなくなってしまったようです
 https://dev.classmethod.jp/articles/ws-summit-online-2020-hol-1/
+
+
 
 メインはデータレイク周りの構成を構築することなので、データレイク周りの知識を習得するのにも役立ちそうです。
 
