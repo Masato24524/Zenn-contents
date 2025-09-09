@@ -3,7 +3,8 @@ title: "AWS Solutions Architect - Associate（SAA-C03)試験に合格しまし�
 emoji: "👏"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["AWS"]
-published: true
+published: false
+published_myblog: true
 date: "2025-05-24"
 ---
 
