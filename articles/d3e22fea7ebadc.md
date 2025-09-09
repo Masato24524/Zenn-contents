@@ -1,5 +1,5 @@
 ---
-title: "基本情報技術者試験に合格しました"
+title: ""
 emoji: "🦁"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: []
